@@ -113,20 +113,6 @@
   :ensure t
   :hook (java-ts-mode . eglot-java-mode))
 
-;; The following shows a documented example of adding to eglot-server-programs.
-;;     (with-eval-after-load 'eglot
-;;       (add-to-list 'eglot-server-programs
-;;                    '(foo-mode . ("fools" "--stdio"))))
-
-;; This is what was in eglot-server-programs originally for Python:
-;;     ((python-mode python-ts-mode)
-;;      . ,(eglot-alternatives
-;;          '("pylsp" "pyls" ("basedpyright-langserver" "--stdio")
-;;            ("pyright-langserver" "--stdio")
-;;            ("pyrefly" "lsp")
-;;            "jedi-language-server" ("ruff" "server") "ruff-lsp")))
-
-
 ;;; Org mode
 
 ;; These keybindings were suggested in the Org manual.
