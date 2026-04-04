@@ -71,9 +71,6 @@
 (use-package eglot
   :after project
   :init
-  ;; Just in case something else sets this variable.
-  (if (not project-vc-extra-root-markers) (setq project-vc-extra-root-markers '()))
-  (add-to-list 'project-vc-extra-root-markers "package.json")
   (defun my/angular-p ()
     (locate-dominating-file default-directory "angular.json"))
   (defun my/probe-locations ()
