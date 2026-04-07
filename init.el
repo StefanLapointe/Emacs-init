@@ -78,25 +78,32 @@
   (define-derived-mode my/ng-typescript-mode
     typescript-ts-mode "Angular/TypeScript"
     "Major mode for editing Angular TypeScript")
+  ;; TODO: Replace html-ts-mode with web-mode
+  (define-derived-mode my/ng-html-mode
+    html-ts-mode "Angular/HTML"
+    "Major mode for editing Angular HTML")
   :config
   ;; Angular-specific configuration with custom modes
   (add-to-list 'eglot-server-programs
                '((typescript-mode typescript-ts-mode) . ("typescript-language-server" "--stdio")))
   (add-to-list 'eglot-server-programs
-               `((my/ng-typescript-mode :language-id "typescript") . ("rass"
-								      "--"
-								      "ngserver"
-                                                                      "--tsProbeLocations" ,(my/probe-locations)
-                                                                      "--ngProbeLocations" ,(my/probe-locations)
-                                                                      "--stdio"
-								      "--"
-								      "typescript-language-server"
-								      "--stdio")))
+               `(((my/ng-typescript-mode :language-id "typescript") (my/ng-html-mode :language-id "html"))
+		 . ("rass"
+		    "--"
+		    "ngserver"
+		    ;; TODO: Stop evaluating at config time
+		    "--tsProbeLocations" ,(my/probe-locations)
+		    "--ngProbeLocations" ,(my/probe-locations)
+		    "--stdio"
+		    "--"
+		    "typescript-language-server"
+		    "--stdio")))
   ;; Python language server multiplexing with rassumfrassum
   (add-to-list 'eglot-server-programs
                '((python-mode python-ts-mode) . ("rass" "python")))
   :hook
   (typescript-ts-mode . eglot-ensure)
+  ;; TODO: Fix the hook system
   ;; It is important that this hook is added after the eglot-ensure hook so that this one runs first.
   ;; Actually I'm not sure... Maybe it runs twice anyway and maybe eglot-ensure is idempotent anyway.
   (typescript-ts-mode . (lambda ()
@@ -104,6 +111,11 @@
                                    (not (derived-mode-p 'my/ng-typescript-mode)))
                               (my/ng-typescript-mode))))
   (my/ng-typescript-mode . eglot-ensure)
+  (html-ts-mode . (lambda ()
+                          (if (and (my/angular-p)
+                                   (not (derived-mode-p 'my/ng-html-mode)))
+                              (my/ng-html-mode))))
+  (my/ng-html-mode . eglot-ensure)
   (python-ts-mode . eglot-ensure))
 
 (use-package eglot-java
